@@ -7,7 +7,7 @@ go get github.com/vishalkuo/bimap
 ```
 
 ## Usage
-```
+```go
 import "github.com/vishalkuo/bimap"
 
 biMap := biMap.NewBiMap()
