@@ -1,45 +1,46 @@
 package bimap
 
 type biMap struct {
-	forward map[string]string
-	inverse map[string]string
+
+	forward map[interface{}]interface{}
+	inverse map[interface{}]interface{}
 }
 
 func NewBiMap() *biMap {
-	return &biMap{forward: make(map[string]string), inverse: make(map[string]string)}
+	return &biMap{forward: make(map[interface{}]interface{}), inverse: make(map[interface{}]interface{})}
 }
 
 
-func (b *biMap) Insert(k string, v string) {
+func (b *biMap) Insert(k interface{}, v interface{}) {
 	b.forward[k] = v
 	b.inverse[v] = k
 }
 
-func (b *biMap) Exists(k string) bool {
+func (b *biMap) Exists(k interface{}) bool {
 	_, ok := b.forward[k]
 	return ok
 }
 
-func (b *biMap) InverseExists(k string) bool {
+func (b *biMap) InverseExists(k interface{}) bool {
 	_, ok := b.inverse[k]
 	return ok
 }
 
-func (b *biMap) Get(k string) (string, bool) {
+func (b *biMap) Get(k interface{}) (interface{}, bool) {
 	if b.Exists(k) {
 		return b.forward[k], true
 	}
 	return "", false
 }
 
-func (b *biMap) InverseGet(v string) (string, bool) {
+func (b *biMap) InverseGet(v interface{}) (interface{}, bool) {
 	if b.InverseExists(v) {
 		return b.inverse[v], true
 	}
 	return "", false
 }
 
-func (b *biMap) Delete(k string) {
+func (b *biMap) Delete(k interface{}) {
 	if b.Exists(k) {
 		val, _ := b.Get(k)
 		delete(b.forward, k)
@@ -47,7 +48,7 @@ func (b *biMap) Delete(k string) {
 	}
 }
 
-func (b *biMap) InverseDelete(v string) {
+func (b *biMap) InverseDelete(v interface{}) {
 	if b.InverseExists(v) {
 		key, _ := b.InverseGet(v)
 		delete(b.inverse, v)

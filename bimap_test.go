@@ -11,7 +11,7 @@ const value = "value"
 
 func TestNewBiMap(t *testing.T) {
 	actual := NewBiMap()
-	expected := biMap{forward:make(map[string]string), inverse:make(map[string]string)}
+	expected := biMap{forward:make(map[interface{}]interface{}), inverse:make(map[interface{}]interface{})}
 	assert.Equal(t, expected, *actual, "They should be equal")
 }
 
@@ -19,8 +19,8 @@ func TestBiMap_Insert(t *testing.T) {
 	actual := NewBiMap()
 	actual.Insert(key, value)
 
-	fwdExpected := make(map[string]string)
-	invExpected := make(map[string]string)
+	fwdExpected := make(map[interface{}]interface{})
+	invExpected := make(map[interface{}]interface{})
 	fwdExpected[key] = value
 	invExpected[value] = key
 	expected := biMap{forward:fwdExpected, inverse:invExpected}
@@ -97,8 +97,8 @@ func TestBiMap_Delete(t *testing.T) {
 
 	actual.Delete(dummyKey)
 
-	fwdExpected := make(map[string]string)
-	invExpected := make(map[string]string)
+	fwdExpected := make(map[interface{}]interface{})
+	invExpected := make(map[interface{}]interface{})
 	fwdExpected[key] = value
 	invExpected[value] = key
 
@@ -124,8 +124,8 @@ func TestBiMap_InverseDelete(t *testing.T) {
 
 	actual.InverseDelete(dummyVal)
 
-	fwdExpected := make(map[string]string)
-	invExpected := make(map[string]string)
+	fwdExpected := make(map[interface{}]interface{})
+	invExpected := make(map[interface{}]interface{})
 	fwdExpected[key] = value
 	invExpected[value] = key
 
