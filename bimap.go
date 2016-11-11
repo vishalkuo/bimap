@@ -32,9 +32,9 @@ func (b *biMap) Get(k string) (string, bool) {
 	return "", false
 }
 
-func (b *biMap) InverseGet(k string) (string, bool) {
-	if b.InverseExists(k) {
-		return b.inverse[k], true
+func (b *biMap) InverseGet(v string) (string, bool) {
+	if b.InverseExists(v) {
+		return b.inverse[v], true
 	}
 	return "", false
 }
