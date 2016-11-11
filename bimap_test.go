@@ -140,6 +140,20 @@ func TestBiMap_InverseDelete(t *testing.T) {
 	assert.Equal(t, expected, *actual, "They should be the same")
 }
 
+func TestBiMap_WithVaryingType(t *testing.T) {
+	actual := NewBiMap()
+	dummyKey := "Dummy key"
+	dummyVal := 3
+
+	actual.Insert(dummyKey, dummyVal)
+
+	res, _ := actual.Get(dummyKey)
+	resVal, _ := actual.InverseGet(dummyVal)
+	assert.Equal(t, dummyVal, res, "Get by string key should return integer val")
+	assert.Equal(t, dummyKey, resVal, "Get by integer val should return string key")
+
+}
+
 
 
 
