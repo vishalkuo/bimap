@@ -36,41 +36,47 @@ func (b *biMap) InverseExists(k interface{}) bool {
 }
 
 func (b *biMap) Get(k interface{}) (interface{}, bool) {
-	if b.Exists(k) {
-		b.s.RLock()
-		defer b.s.RUnlock()
-		return b.forward[k], true
+	if !b.Exists(k) {
+		return "", false
 	}
-	return "", false
+	b.s.RLock()
+	defer b.s.RUnlock()
+	return b.forward[k], true
+
 }
 
 func (b *biMap) InverseGet(v interface{}) (interface{}, bool) {
-	if b.InverseExists(v) {
-		b.s.RLock()
-		defer b.s.RUnlock()
-		return b.inverse[v], true
+	if !b.InverseExists(v) {
+		return "", false
 	}
-	return "", false
+	b.s.RLock()
+	defer b.s.RUnlock()
+	return b.inverse[v], true
+
 }
 
 func (b *biMap) Delete(k interface{}) {
-	if b.Exists(k) {
-		val, _ := b.Get(k)
-		b.s.Lock()
-		defer b.s.Unlock()
-		delete(b.forward, k)
-		delete(b.inverse, val)
+	if !b.Exists(k) {
+		return
 	}
+	val, _ := b.Get(k)
+	b.s.Lock()
+	defer b.s.Unlock()
+	delete(b.forward, k)
+	delete(b.inverse, val)
 }
 
 func (b *biMap) InverseDelete(v interface{}) {
-	if b.InverseExists(v) {
-		key, _ := b.InverseGet(v)
-		b.s.Lock()
-		defer b.s.Unlock()
-		delete(b.inverse, v)
-		delete(b.forward, key)
+	if !b.InverseExists(v) {
+		return
 	}
+
+	key, _ := b.InverseGet(v)
+	b.s.Lock()
+	defer b.s.Unlock()
+	delete(b.inverse, v)
+	delete(b.forward, key)
+
 }
 
 func (b*biMap) Size() int{
