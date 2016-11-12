@@ -4,16 +4,23 @@ import "sync"
 
 type biMap struct {
 	s sync.RWMutex
+	immutable bool
 	forward map[interface{}]interface{}
 	inverse map[interface{}]interface{}
 }
 
 func NewBiMap() *biMap {
-	return &biMap{forward: make(map[interface{}]interface{}), inverse: make(map[interface{}]interface{})}
+	return &biMap{forward: make(map[interface{}]interface{}), inverse: make(map[interface{}]interface{}), immutable:false}
 }
 
 
 func (b *biMap) Insert(k interface{}, v interface{}) {
+	b.s.RLock()
+	if b.immutable {
+		panic("Cannot modify immutable map")
+	}
+	b.s.RUnlock()
+
 	b.s.Lock()
 	defer b.s.Unlock()
 	b.forward[k] = v
@@ -56,6 +63,12 @@ func (b *biMap) InverseGet(v interface{}) (interface{}, bool) {
 }
 
 func (b *biMap) Delete(k interface{}) {
+	b.s.RLock()
+	if b.immutable {
+		panic("Cannot modify immutable map")
+	}
+	b.s.RUnlock()
+
 	if !b.Exists(k) {
 		return
 	}
@@ -67,6 +80,12 @@ func (b *biMap) Delete(k interface{}) {
 }
 
 func (b *biMap) InverseDelete(v interface{}) {
+	b.s.RLock()
+	if b.immutable {
+		panic("Cannot modify immutable map")
+	}
+	b.s.RUnlock()
+
 	if !b.InverseExists(v) {
 		return
 	}
@@ -83,4 +102,10 @@ func (b*biMap) Size() int{
 	b.s.RLock()
 	defer b.s.RUnlock()
 	return len(b.forward)
+}
+
+func (b *biMap) SetImmutable() {
+	b.s.Lock()
+	defer b.s.Unlock()
+	b.immutable = true
 }

@@ -19,5 +19,5 @@ biMap.Size() // == 0
 biMap2 := bimap.NewBiMap()
 biMap2.Insert("key", 1) // Notice different types
 val, ok := biMap2.Get("key") // Returns 1
-val, ok = biMap2.InverseGet(1) //Return "key"
+val, ok = biMap2.InverseGet(1) // Returns "key"
 ```

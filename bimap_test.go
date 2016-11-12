@@ -154,6 +154,44 @@ func TestBiMap_WithVaryingType(t *testing.T) {
 
 }
 
+func TestBiMap_SetImmutable(t *testing.T) {
+	actual := NewBiMap()
+	dummyKey := "Dummy key"
+	dummyVal := 3
+
+	actual.Insert(dummyKey, dummyVal)
+
+	actual.SetImmutable()
+
+	assert.Panics(t, func() {
+		actual.Delete(dummyKey)
+	}, "It should panic on a mutation operation")
+
+	val, _ := actual.Get(dummyKey)
+
+	assert.Equal(t, dummyVal, val, "It should still have the value")
+
+	assert.Panics(t, func() {
+		actual.InverseDelete(dummyVal)
+	}, "It should panic on a mutation operation")
+
+	key, _ := actual.InverseGet(dummyVal)
+
+	assert.Equal(t, dummyKey, key, "It should still have the key")
+
+	size := actual.Size()
+
+	assert.Equal(t, 1, size, "Size should be one")
+
+	assert.Panics(t, func() {
+		actual.Insert("New", 1)
+	}, "It should panic on a mutation operation")
+
+	size = actual.Size()
+
+	assert.Equal(t, 1, size, "Size should be one")
+
+}
 
 
 
