@@ -3,16 +3,15 @@ package bimap
 import "sync"
 
 type biMap struct {
-	s sync.RWMutex
+	s         sync.RWMutex
 	immutable bool
-	forward map[interface{}]interface{}
-	inverse map[interface{}]interface{}
+	forward   map[interface{}]interface{}
+	inverse   map[interface{}]interface{}
 }
 
 func NewBiMap() *biMap {
-	return &biMap{forward: make(map[interface{}]interface{}), inverse: make(map[interface{}]interface{}), immutable:false}
+	return &biMap{forward: make(map[interface{}]interface{}), inverse: make(map[interface{}]interface{}), immutable: false}
 }
-
 
 func (b *biMap) Insert(k interface{}, v interface{}) {
 	b.s.RLock()
@@ -98,13 +97,13 @@ func (b *biMap) InverseDelete(v interface{}) {
 
 }
 
-func (b*biMap) Size() int{
+func (b *biMap) Size() int {
 	b.s.RLock()
 	defer b.s.RUnlock()
 	return len(b.forward)
 }
 
-func (b *biMap) SetImmutable() {
+func (b *biMap) MakeImmutable() {
 	b.s.Lock()
 	defer b.s.Unlock()
 	b.immutable = true
