@@ -33,7 +33,7 @@ func (b *biMap) Exists(k interface{}) bool {
 	return ok
 }
 
-func (b *biMap) InverseExists(k interface{}) bool {
+func (b *biMap) ExistsInverse(k interface{}) bool {
 	b.s.RLock()
 	defer b.s.RUnlock()
 
@@ -51,8 +51,8 @@ func (b *biMap) Get(k interface{}) (interface{}, bool) {
 
 }
 
-func (b *biMap) InverseGet(v interface{}) (interface{}, bool) {
-	if !b.InverseExists(v) {
+func (b *biMap) GetInverse(v interface{}) (interface{}, bool) {
+	if !b.ExistsInverse(v) {
 		return "", false
 	}
 	b.s.RLock()
@@ -78,18 +78,18 @@ func (b *biMap) Delete(k interface{}) {
 	delete(b.inverse, val)
 }
 
-func (b *biMap) InverseDelete(v interface{}) {
+func (b *biMap) DeleteInverse(v interface{}) {
 	b.s.RLock()
 	if b.immutable {
 		panic("Cannot modify immutable map")
 	}
 	b.s.RUnlock()
 
-	if !b.InverseExists(v) {
+	if !b.ExistsInverse(v) {
 		return
 	}
 
-	key, _ := b.InverseGet(v)
+	key, _ := b.GetInverse(v)
 	b.s.Lock()
 	defer b.s.Unlock()
 	delete(b.inverse, v)

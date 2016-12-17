@@ -39,8 +39,8 @@ func TestBiMap_InverseExists(t *testing.T) {
 	actual := NewBiMap()
 
 	actual.Insert(key, value)
-	assert.False(t, actual.InverseExists("ARBITARY_VALUE"), "Value should not exist")
-	assert.True(t, actual.InverseExists(value), "Inserted value should exist")
+	assert.False(t, actual.ExistsInverse("ARBITARY_VALUE"), "Value should not exist")
+	assert.True(t, actual.ExistsInverse(value), "Inserted value should exist")
 }
 
 func TestBiMap_Get(t *testing.T) {
@@ -64,7 +64,7 @@ func TestBiMap_GetInverse(t *testing.T) {
 
 	actual.Insert(key, value)
 
-	actualKey, ok := actual.InverseGet(value)
+	actualKey, ok := actual.GetInverse(value)
 
 	assert.True(t, ok, "It should return true")
 	assert.Equal(t, key, actualKey, "Key and returned key should be equal")
@@ -121,7 +121,7 @@ func TestBiMap_InverseDelete(t *testing.T) {
 
 	assert.Equal(t, 2, actual.Size(), "Size of bimap should be two")
 
-	actual.InverseDelete(dummyVal)
+	actual.DeleteInverse(dummyVal)
 
 	fwdExpected := make(map[interface{}]interface{})
 	invExpected := make(map[interface{}]interface{})
@@ -133,7 +133,7 @@ func TestBiMap_InverseDelete(t *testing.T) {
 	assert.Equal(t, 1, actual.Size(), "Size of bimap should be two")
 	assert.Equal(t, expected, *actual, "They should be the same")
 
-	actual.InverseDelete(dummyVal)
+	actual.DeleteInverse(dummyVal)
 
 	assert.Equal(t, 1, actual.Size(), "Size of bimap should be two")
 	assert.Equal(t, expected, *actual, "They should be the same")
@@ -147,7 +147,7 @@ func TestBiMap_WithVaryingType(t *testing.T) {
 	actual.Insert(dummyKey, dummyVal)
 
 	res, _ := actual.Get(dummyKey)
-	resVal, _ := actual.InverseGet(dummyVal)
+	resVal, _ := actual.GetInverse(dummyVal)
 	assert.Equal(t, dummyVal, res, "Get by string key should return integer val")
 	assert.Equal(t, dummyKey, resVal, "Get by integer val should return string key")
 
@@ -171,10 +171,10 @@ func TestBiMap_MakeImmutable(t *testing.T) {
 	assert.Equal(t, dummyVal, val, "It should still have the value")
 
 	assert.Panics(t, func() {
-		actual.InverseDelete(dummyVal)
+		actual.DeleteInverse(dummyVal)
 	}, "It should panic on a mutation operation")
 
-	key, _ := actual.InverseGet(dummyVal)
+	key, _ := actual.GetInverse(dummyVal)
 
 	assert.Equal(t, dummyKey, key, "It should still have the key")
 
