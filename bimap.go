@@ -108,3 +108,20 @@ func (b *biMap) MakeImmutable() {
 	defer b.s.Unlock()
 	b.immutable = true
 }
+
+func (b *biMap) GetInverseMap() map[interface{}]interface{} {
+	return b.inverse
+}
+
+func (b *biMap) GetForwardMap() map[interface{}]interface{} {
+	return b.forward
+}
+
+func (b *biMap) Lock() {
+	b.s.Lock()
+}
+
+func (b *biMap) Unlock() {
+	b.s.Unlock()
+}
+
