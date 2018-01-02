@@ -2,6 +2,7 @@ package bimap
 
 import (
 	"github.com/stretchr/testify/assert"
+	"reflect"
 	"testing"
 )
 
@@ -190,4 +191,34 @@ func TestBiMap_MakeImmutable(t *testing.T) {
 
 	assert.Equal(t, 1, size, "Size should be one")
 
+}
+
+func TestBiMap_GetForwardMap(t *testing.T) {
+	actual := NewBiMap()
+	dummyKey := "Dummy key"
+	dummyVal := 42
+
+	forwardMap := make(map[interface{}]interface{})
+	forwardMap[dummyKey] = dummyVal
+
+	actual.Insert(dummyKey, dummyVal)
+
+	actualForwardMap := actual.GetForwardMap()
+	eq := reflect.DeepEqual(actualForwardMap, forwardMap)
+	assert.True(t, eq, "Forward maps should be equal")
+}
+
+func TestBiMap_GetInverseMap(t *testing.T) {
+	actual := NewBiMap()
+	dummyKey := "Dummy key"
+	dummyVal := 42
+
+	inverseMap := make(map[interface{}]interface{})
+	inverseMap[dummyVal] = dummyKey
+
+	actual.Insert(dummyKey, dummyVal)
+
+	actualInverseMap := actual.GetInverseMap()
+	eq := reflect.DeepEqual(actualInverseMap, inverseMap)
+	assert.True(t, eq, "Inverse maps should be equal")
 }

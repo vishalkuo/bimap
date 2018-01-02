@@ -124,4 +124,3 @@ func (b *biMap) Lock() {
 func (b *biMap) Unlock() {
 	b.s.Unlock()
 }
-
