@@ -1,4 +1,6 @@
 # bimap
+[![GoDoc](https://godoc.org/github.com/vishalkuo/bimap?status.svg)](https://godoc.org/github.com/vishalkuo/bimap)
+
 A bidirectional map written in Go
 
 ## Installation
