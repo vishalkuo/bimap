@@ -1,3 +1,4 @@
+// Package bimap provides a threadsafe bidirectional map
 package bimap
 
 import "sync"
