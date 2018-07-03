@@ -2,18 +2,21 @@ package bimap
 
 import "sync"
 
-type biMap struct {
+// BiMap is a bi-directional hashmap that is thread safe and supports immutability
+type BiMap struct {
 	s         sync.RWMutex
 	immutable bool
 	forward   map[interface{}]interface{}
 	inverse   map[interface{}]interface{}
 }
 
-func NewBiMap() *biMap {
-	return &biMap{forward: make(map[interface{}]interface{}), inverse: make(map[interface{}]interface{}), immutable: false}
+// NewBiMap returns a an empty, mutable, biMap
+func NewBiMap() *BiMap {
+	return &BiMap{forward: make(map[interface{}]interface{}), inverse: make(map[interface{}]interface{}), immutable: false}
 }
 
-func (b *biMap) Insert(k interface{}, v interface{}) {
+// Insert puts a key and value into the BiMap, provided its mutable. Also creates the reverse mapping from value to key.
+func (b *BiMap) Insert(k interface{}, v interface{}) {
 	b.s.RLock()
 	if b.immutable {
 		panic("Cannot modify immutable map")
@@ -26,14 +29,16 @@ func (b *biMap) Insert(k interface{}, v interface{}) {
 	b.inverse[v] = k
 }
 
-func (b *biMap) Exists(k interface{}) bool {
+// Exists checks whether or not a key exists in the BiMap
+func (b *BiMap) Exists(k interface{}) bool {
 	b.s.RLock()
 	defer b.s.RUnlock()
 	_, ok := b.forward[k]
 	return ok
 }
 
-func (b *biMap) ExistsInverse(k interface{}) bool {
+// ExistsInverse checks whether or not a value exists in the BiMap
+func (b *BiMap) ExistsInverse(k interface{}) bool {
 	b.s.RLock()
 	defer b.s.RUnlock()
 
@@ -41,7 +46,8 @@ func (b *biMap) ExistsInverse(k interface{}) bool {
 	return ok
 }
 
-func (b *biMap) Get(k interface{}) (interface{}, bool) {
+// Get returns the value for a given key in the BiMap and whether or not the element was present.
+func (b *BiMap) Get(k interface{}) (interface{}, bool) {
 	if !b.Exists(k) {
 		return "", false
 	}
@@ -51,7 +57,8 @@ func (b *biMap) Get(k interface{}) (interface{}, bool) {
 
 }
 
-func (b *biMap) GetInverse(v interface{}) (interface{}, bool) {
+// GetInverse returns the key for a given value in the BiMap and whether or not the element was present.
+func (b *BiMap) GetInverse(v interface{}) (interface{}, bool) {
 	if !b.ExistsInverse(v) {
 		return "", false
 	}
@@ -61,7 +68,8 @@ func (b *biMap) GetInverse(v interface{}) (interface{}, bool) {
 
 }
 
-func (b *biMap) Delete(k interface{}) {
+// Delete removes a key-value pair from the BiMap for a given key. Returns if the key doesn't exist
+func (b *BiMap) Delete(k interface{}) {
 	b.s.RLock()
 	if b.immutable {
 		panic("Cannot modify immutable map")
@@ -78,7 +86,8 @@ func (b *biMap) Delete(k interface{}) {
 	delete(b.inverse, val)
 }
 
-func (b *biMap) DeleteInverse(v interface{}) {
+// DeleteInverse emoves a key-value pair from the BiMap for a given value. Returns if the value doesn't exist
+func (b *BiMap) DeleteInverse(v interface{}) {
 	b.s.RLock()
 	if b.immutable {
 		panic("Cannot modify immutable map")
@@ -97,30 +106,36 @@ func (b *biMap) DeleteInverse(v interface{}) {
 
 }
 
-func (b *biMap) Size() int {
+// Size returns the number of elements in the bimap
+func (b *BiMap) Size() int {
 	b.s.RLock()
 	defer b.s.RUnlock()
 	return len(b.forward)
 }
 
-func (b *biMap) MakeImmutable() {
+// MakeImmutable freezes the BiMap preventing any further write actions from taking place
+func (b *BiMap) MakeImmutable() {
 	b.s.Lock()
 	defer b.s.Unlock()
 	b.immutable = true
 }
 
-func (b *biMap) GetInverseMap() map[interface{}]interface{} {
+// GetInverseMap returns a regular go map mapping from the BiMap's values to its keys
+func (b *BiMap) GetInverseMap() map[interface{}]interface{} {
 	return b.inverse
 }
 
-func (b *biMap) GetForwardMap() map[interface{}]interface{} {
+// GetForwardMap returns a regular go map mapping from the BiMap's keys to its values
+func (b *BiMap) GetForwardMap() map[interface{}]interface{} {
 	return b.forward
 }
 
-func (b *biMap) Lock() {
+// Lock manually locks the BiMap's mutex
+func (b *BiMap) Lock() {
 	b.s.Lock()
 }
 
-func (b *biMap) Unlock() {
+// Unlock manually unlocks the BiMap's mutex
+func (b *BiMap) Unlock() {
 	b.s.Unlock()
 }

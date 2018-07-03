@@ -1,9 +1,10 @@
 package bimap
 
 import (
-	"github.com/stretchr/testify/assert"
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 const key = "key"
@@ -11,8 +12,8 @@ const value = "value"
 
 func TestNewBiMap(t *testing.T) {
 	actual := NewBiMap()
-	expected := biMap{forward: make(map[interface{}]interface{}), inverse: make(map[interface{}]interface{})}
-	assert.Equal(t, expected, *actual, "They should be equal")
+	expected := &BiMap{forward: make(map[interface{}]interface{}), inverse: make(map[interface{}]interface{})}
+	assert.Equal(t, expected, actual, "They should be equal")
 }
 
 func TestBiMap_Insert(t *testing.T) {
@@ -23,9 +24,9 @@ func TestBiMap_Insert(t *testing.T) {
 	invExpected := make(map[interface{}]interface{})
 	fwdExpected[key] = value
 	invExpected[value] = key
-	expected := biMap{forward: fwdExpected, inverse: invExpected}
+	expected := &BiMap{forward: fwdExpected, inverse: invExpected}
 
-	assert.Equal(t, expected, *actual, "They should be equal")
+	assert.Equal(t, expected, actual, "They should be equal")
 }
 
 func TestBiMap_Exists(t *testing.T) {
@@ -102,15 +103,15 @@ func TestBiMap_Delete(t *testing.T) {
 	fwdExpected[key] = value
 	invExpected[value] = key
 
-	expected := biMap{forward: fwdExpected, inverse: invExpected}
+	expected := &BiMap{forward: fwdExpected, inverse: invExpected}
 
 	assert.Equal(t, 1, actual.Size(), "Size of bimap should be two")
-	assert.Equal(t, expected, *actual, "They should be the same")
+	assert.Equal(t, expected, actual, "They should be the same")
 
 	actual.Delete(dummyKey)
 
 	assert.Equal(t, 1, actual.Size(), "Size of bimap should be two")
-	assert.Equal(t, expected, *actual, "They should be the same")
+	assert.Equal(t, expected, actual, "They should be the same")
 }
 
 func TestBiMap_InverseDelete(t *testing.T) {
@@ -129,15 +130,15 @@ func TestBiMap_InverseDelete(t *testing.T) {
 	fwdExpected[key] = value
 	invExpected[value] = key
 
-	expected := biMap{forward: fwdExpected, inverse: invExpected}
+	expected := &BiMap{forward: fwdExpected, inverse: invExpected}
 
 	assert.Equal(t, 1, actual.Size(), "Size of bimap should be two")
-	assert.Equal(t, expected, *actual, "They should be the same")
+	assert.Equal(t, expected, actual, "They should be the same")
 
 	actual.DeleteInverse(dummyVal)
 
 	assert.Equal(t, 1, actual.Size(), "Size of bimap should be two")
-	assert.Equal(t, expected, *actual, "They should be the same")
+	assert.Equal(t, expected, actual, "They should be the same")
 }
 
 func TestBiMap_WithVaryingType(t *testing.T) {
