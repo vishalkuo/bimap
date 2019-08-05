@@ -16,6 +16,14 @@ func NewBiMap() *BiMap {
 	return &BiMap{forward: make(map[interface{}]interface{}), inverse: make(map[interface{}]interface{}), immutable: false}
 }
 
+func NewBiMapFrom(forwardMap map[interface{}]interface{}) *BiMap {
+	biMap := NewBiMap()
+	for k, v := range forwardMap {
+		biMap.Insert(k, v)
+	}
+	return biMap
+}
+
 // Insert puts a key and value into the BiMap, provided its mutable. Also creates the reverse mapping from value to key.
 func (b *BiMap) Insert(k interface{}, v interface{}) {
 	b.s.RLock()
