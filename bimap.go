@@ -13,8 +13,16 @@ type BiMap[K comparable, V comparable] struct {
 
 // NewBiMap returns a an empty, mutable, biMap
 func NewBiMap[K comparable, V comparable]() *BiMap[K, V] {
-
 	return &BiMap[K, V]{forward: make(map[K]V), inverse: make(map[V]K), immutable: false}
+}
+
+// NewBiMapFrom returns a new BiMap from a map[K, V]
+func NewBiMapFromMap[K comparable, V comparable](forwardMap map[K]V) *BiMap[K, V] {
+	biMap := NewBiMap[K, V]()
+	for k, v := range forwardMap {
+		biMap.Insert(k, v)
+	}
+	return biMap
 }
 
 // Insert puts a key and value into the BiMap, provided its mutable. Also creates the reverse mapping from value to key.
