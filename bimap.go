@@ -11,15 +11,10 @@ type BiMap[K comparable, V comparable] struct {
 	inverse   map[V]K
 }
 
-// Alias for interface{}
-type None struct{}
-
-func (n None) comparable() {}
-
 // NewBiMap returns a an empty, mutable, biMap
-func NewBiMap[K comparable, V any]() BiMap {
+func NewBiMap[K comparable, V comparable]() *BiMap[K, V] {
 
-	return BiMap{forward: make(map[K]V), inverse: make(map[K]V), immutable: false}
+	return &BiMap[K, V]{forward: make(map[K]V), inverse: make(map[V]K), immutable: false}
 }
 
 // Insert puts a key and value into the BiMap, provided its mutable. Also creates the reverse mapping from value to key.
@@ -56,7 +51,7 @@ func (b *BiMap[K, V]) ExistsInverse(k V) bool {
 // Get returns the value for a given key in the BiMap and whether or not the element was present.
 func (b *BiMap[K, V]) Get(k K) (V, bool) {
 	if !b.Exists(k) {
-		return any, false
+		return *new(V), false
 	}
 	b.s.RLock()
 	defer b.s.RUnlock()
@@ -66,7 +61,7 @@ func (b *BiMap[K, V]) Get(k K) (V, bool) {
 // GetInverse returns the key for a given value in the BiMap and whether or not the element was present.
 func (b *BiMap[K, V]) GetInverse(v V) (K, bool) {
 	if !b.ExistsInverse(v) {
-		return "", false
+		return *new(K), false
 	}
 	b.s.RLock()
 	defer b.s.RUnlock()
@@ -75,7 +70,7 @@ func (b *BiMap[K, V]) GetInverse(v V) (K, bool) {
 }
 
 // Delete removes a key-value pair from the BiMap for a given key. Returns if the key doesn't exist
-func (b *BiMap[K, V]) Delete(k interface{}) {
+func (b *BiMap[K, V]) Delete(k K) {
 	b.s.RLock()
 	if b.immutable {
 		panic("Cannot modify immutable map")
