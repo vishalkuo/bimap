@@ -1,4 +1,4 @@
-module github.com/skulos/bimap
+module github.com/vishalkuo/bimap
 
 go 1.18
 
