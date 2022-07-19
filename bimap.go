@@ -25,14 +25,6 @@ func NewBiMapFromMap[K comparable, V comparable](forwardMap map[K]V) *BiMap[K, V
 	return biMap
 }
 
-func NewBiMapFrom(forwardMap map[interface{}]interface{}) *BiMap {
-	biMap := NewBiMap()
-	for k, v := range forwardMap {
-		biMap.Insert(k, v)
-	}
-	return biMap
-}
-
 // Insert puts a key and value into the BiMap, provided its mutable. Also creates the reverse mapping from value to key.
 func (b *BiMap[K, V]) Insert(k K, v V) {
 	b.s.RLock()
