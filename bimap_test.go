@@ -11,41 +11,41 @@ const key = "key"
 const value = "value"
 
 func TestNewBiMap(t *testing.T) {
-	actual := NewBiMap()
-	expected := &BiMap{forward: make(map[interface{}]interface{}), inverse: make(map[interface{}]interface{})}
+	actual := NewBiMap[string, string]()
+	expected := &BiMap[string, string]{forward: make(map[string]string), inverse: make(map[string]string)}
 	assert.Equal(t, expected, actual, "They should be equal")
 }
 
 func TestNewBiMapFrom(t *testing.T) {
-	actual := NewBiMapFrom(map[interface{}]interface{}{
+	actual := NewBiMapFromMap(map[string]string{
 		key: value,
 	})
 	actual.Insert(key, value)
 
-	fwdExpected := make(map[interface{}]interface{})
-	invExpected := make(map[interface{}]interface{})
+	fwdExpected := make(map[string]string)
+	invExpected := make(map[string]string)
 	fwdExpected[key] = value
 	invExpected[value] = key
-	expected := &BiMap{forward: fwdExpected, inverse: invExpected}
+	expected := &BiMap[string, string]{forward: fwdExpected, inverse: invExpected}
 
 	assert.Equal(t, expected, actual, "They should be equal")
 }
 
 func TestBiMap_Insert(t *testing.T) {
-	actual := NewBiMap()
+	actual := NewBiMap[string, string]()
 	actual.Insert(key, value)
 
-	fwdExpected := make(map[interface{}]interface{})
-	invExpected := make(map[interface{}]interface{})
+	fwdExpected := make(map[string]string)
+	invExpected := make(map[string]string)
 	fwdExpected[key] = value
 	invExpected[value] = key
-	expected := &BiMap{forward: fwdExpected, inverse: invExpected}
+	expected := &BiMap[string, string]{forward: fwdExpected, inverse: invExpected}
 
 	assert.Equal(t, expected, actual, "They should be equal")
 }
 
 func TestBiMap_Exists(t *testing.T) {
-	actual := NewBiMap()
+	actual := NewBiMap[string, string]()
 
 	actual.Insert(key, value)
 	assert.False(t, actual.Exists("ARBITARY_KEY"), "Key should not exist")
@@ -53,7 +53,7 @@ func TestBiMap_Exists(t *testing.T) {
 }
 
 func TestBiMap_InverseExists(t *testing.T) {
-	actual := NewBiMap()
+	actual := NewBiMap[string, string]()
 
 	actual.Insert(key, value)
 	assert.False(t, actual.ExistsInverse("ARBITARY_VALUE"), "Value should not exist")
@@ -61,7 +61,7 @@ func TestBiMap_InverseExists(t *testing.T) {
 }
 
 func TestBiMap_Get(t *testing.T) {
-	actual := NewBiMap()
+	actual := NewBiMap[string, string]()
 
 	actual.Insert(key, value)
 
@@ -77,7 +77,7 @@ func TestBiMap_Get(t *testing.T) {
 }
 
 func TestBiMap_GetInverse(t *testing.T) {
-	actual := NewBiMap()
+	actual := NewBiMap[string, string]()
 
 	actual.Insert(key, value)
 
@@ -93,7 +93,7 @@ func TestBiMap_GetInverse(t *testing.T) {
 }
 
 func TestBiMap_Size(t *testing.T) {
-	actual := NewBiMap()
+	actual := NewBiMap[string, string]()
 
 	assert.Equal(t, 0, actual.Size(), "Length of empty bimap should be zero")
 
@@ -103,7 +103,7 @@ func TestBiMap_Size(t *testing.T) {
 }
 
 func TestBiMap_Delete(t *testing.T) {
-	actual := NewBiMap()
+	actual := NewBiMap[string, string]()
 	dummyKey := "DummyKey"
 	dummyVal := "DummyVal"
 	actual.Insert(key, value)
@@ -113,12 +113,12 @@ func TestBiMap_Delete(t *testing.T) {
 
 	actual.Delete(dummyKey)
 
-	fwdExpected := make(map[interface{}]interface{})
-	invExpected := make(map[interface{}]interface{})
+	fwdExpected := make(map[string]string)
+	invExpected := make(map[string]string)
 	fwdExpected[key] = value
 	invExpected[value] = key
 
-	expected := &BiMap{forward: fwdExpected, inverse: invExpected}
+	expected := &BiMap[string, string]{forward: fwdExpected, inverse: invExpected}
 
 	assert.Equal(t, 1, actual.Size(), "Size of bimap should be two")
 	assert.Equal(t, expected, actual, "They should be the same")
@@ -130,7 +130,7 @@ func TestBiMap_Delete(t *testing.T) {
 }
 
 func TestBiMap_InverseDelete(t *testing.T) {
-	actual := NewBiMap()
+	actual := NewBiMap[string, string]()
 	dummyKey := "DummyKey"
 	dummyVal := "DummyVal"
 	actual.Insert(key, value)
@@ -140,12 +140,12 @@ func TestBiMap_InverseDelete(t *testing.T) {
 
 	actual.DeleteInverse(dummyVal)
 
-	fwdExpected := make(map[interface{}]interface{})
-	invExpected := make(map[interface{}]interface{})
+	fwdExpected := make(map[string]string)
+	invExpected := make(map[string]string)
 	fwdExpected[key] = value
 	invExpected[value] = key
 
-	expected := &BiMap{forward: fwdExpected, inverse: invExpected}
+	expected := &BiMap[string, string]{forward: fwdExpected, inverse: invExpected}
 
 	assert.Equal(t, 1, actual.Size(), "Size of bimap should be two")
 	assert.Equal(t, expected, actual, "They should be the same")
@@ -157,7 +157,7 @@ func TestBiMap_InverseDelete(t *testing.T) {
 }
 
 func TestBiMap_WithVaryingType(t *testing.T) {
-	actual := NewBiMap()
+	actual := NewBiMap[string, int]()
 	dummyKey := "Dummy key"
 	dummyVal := 3
 
@@ -171,7 +171,7 @@ func TestBiMap_WithVaryingType(t *testing.T) {
 }
 
 func TestBiMap_MakeImmutable(t *testing.T) {
-	actual := NewBiMap()
+	actual := NewBiMap[string, int]()
 	dummyKey := "Dummy key"
 	dummyVal := 3
 
@@ -210,11 +210,11 @@ func TestBiMap_MakeImmutable(t *testing.T) {
 }
 
 func TestBiMap_GetForwardMap(t *testing.T) {
-	actual := NewBiMap()
+	actual := NewBiMap[string, int]()
 	dummyKey := "Dummy key"
 	dummyVal := 42
 
-	forwardMap := make(map[interface{}]interface{})
+	forwardMap := make(map[string]int)
 	forwardMap[dummyKey] = dummyVal
 
 	actual.Insert(dummyKey, dummyVal)
@@ -225,11 +225,11 @@ func TestBiMap_GetForwardMap(t *testing.T) {
 }
 
 func TestBiMap_GetInverseMap(t *testing.T) {
-	actual := NewBiMap()
+	actual := NewBiMap[string, int]()
 	dummyKey := "Dummy key"
 	dummyVal := 42
 
-	inverseMap := make(map[interface{}]interface{})
+	inverseMap := make(map[int]string)
 	inverseMap[dummyVal] = dummyKey
 
 	actual.Insert(dummyKey, dummyVal)
