@@ -54,6 +54,7 @@ func TestBiMap_InsertTwice(t *testing.T) {
 	fwdExpected := make(map[string]string)
 	invExpected := make(map[string]string)
 	fwdExpected[key] = additionalValue
+
 	invExpected[additionalValue] = key
 	expected := &BiMap[string, string]{forward: fwdExpected, inverse: invExpected}
 
