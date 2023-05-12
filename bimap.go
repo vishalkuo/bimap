@@ -35,6 +35,11 @@ func (b *BiMap[K, V]) Insert(k K, v V) {
 
 	b.s.Lock()
 	defer b.s.Unlock()
+
+	if _, ok := b.forward[k]; ok {
+		delete(b.inverse, b.forward[k])
+	}
+
 	b.forward[k] = v
 	b.inverse[v] = k
 }
